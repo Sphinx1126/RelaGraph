@@ -35,16 +35,15 @@ def parse_args(args=None):
     parser.add_argument('--do_test', action='store_true', default=True)
     parser.add_argument('--evaluate_train', action='store_true', help='Evaluate on training data')
 
-    parser.add_argument('--data_name', type=str, default='KMHEO', help='dataset name, default to KMHEO')
+    parser.add_argument('--data_name', type=str, default='KMHEO', help='dataset name, e.g. KMHEO')
     parser.add_argument('--use_RelaGraph', default=True, type=bool)
-    parser.add_argument('--SF', default='TripleRE', type=str)
     
     parser.add_argument('-n', '--negative_sample_size', default=32, type=int)
     parser.add_argument('-d', '--hidden_dim', default=64, type=int)
     parser.add_argument('-g', '--gamma', default=6.0, type=float)
     parser.add_argument('-adv', '--negative_adversarial_sampling', action='store_true', default=True)
     parser.add_argument('-a', '--adversarial_temperature', default=2.0, type=float)
-    parser.add_argument('-b', '--batch_size', default=128, type=int)
+    parser.add_argument('-b', '--batch_size', default=64, type=int)
     parser.add_argument('--test_batch_size', default=16, type=int, help='valid/test batch size')
     parser.add_argument('--uni_weight', action='store_true',
                         help='Otherwise use subsampling weighting like in word2vec')
@@ -71,11 +70,11 @@ def parse_args(args=None):
     parser.add_argument('--true_negative', action='store_true', default=True, help='whether to remove existing triples from negative sampling')
     parser.add_argument('--inverse', action='store_true', help='whether to add inverse edges')
     parser.add_argument('--val_inverse', action='store_true', help='whether to add inverse edges to the validation set')
-    parser.add_argument('--drop', type=float, default=0.05, help='Dropout in layers')
+    parser.add_argument('--drop', type=float, default=0.3, help='Dropout in layers')
     
     parser.add_argument('-u', '--triplere_u', default=1.0, type=float)
-    parser.add_argument('--anchor_size', default=0.1, type=float, help='size of the anchor set, i.e. |A|')
-    parser.add_argument('-ancs', '--sample_anchors', default=10, type=int)
+    parser.add_argument('--anchor_size', default=0.2, type=float, help='size of the anchor set, i.e. |A|')
+    parser.add_argument('-ancs', '--sample_anchors', default=5, type=int)
     parser.add_argument('-path', '--use_anchor_path', default=True)
     parser.add_argument('--sample_neighbors', default=5, type=int)
     parser.add_argument('--max_relation', default=3, type=int)
@@ -433,6 +432,7 @@ if __name__ == '__main__':
         override_config(args)
 
     # 参数保存路径
+    args.SF='TripleRE'
     args.save_path = 'log/%s/%s/%s-%s/%s' % (
     args.data_name, args.SF, args.hidden_dim, args.gamma, time.time()) if args.save_path == None else args.save_path
     writer = SummaryWriter(args.save_path)
